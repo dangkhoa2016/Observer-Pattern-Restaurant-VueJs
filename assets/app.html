@@ -1,0 +1,31 @@
+<div class='app'>
+
+  <panel-action></panel-action>
+
+  <div class='container-fluid mt-2' id='main'>
+    <div class='row'>
+      <div class='col-md-9'>
+        <chef-holder></chef-holder>
+      </div>
+
+      <div class='col-md-3'>
+        <div id='assistant'>
+          <assistant></assistant>
+        </div>
+      </div>
+    </div>
+
+    <table-holder></table-holder>
+  </div>
+
+  <div id='modal-holder'>
+    <modal-foods></modal-foods>
+    <modal-confirm></modal-confirm>
+  </div>
+
+  <welcome-modal></welcome-modal>
+
+  <a href='#' @click.prevent='go_to_top' :class="['to-top text-success', { 'd-none': !show_go_to_top }]">
+    <i class='far fa-arrow-alt-circle-up fa-2x'></i>
+  </a>
+</div>
