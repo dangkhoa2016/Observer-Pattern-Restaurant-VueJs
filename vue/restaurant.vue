@@ -49,16 +49,23 @@
         addTable: 'restaurantStore/addTable',
         addChef: 'restaurantStore/addChef',
       }),
-      setCompleted() {
-        delete window.store;
-        delete window.options;
-        delete window.sleep;
-      },
       handleScroll(ev) {
         this.show_go_to_top = window.scrollY > 300;
       },
+      handleRuntimeError(event) {
+        const detail = event.detail || {};
+        if (!detail.message || !this.$bvToast)
+          return;
+
+        this.$bvToast.toast(detail.message, {
+          title: `${detail.source || 'application'} error`,
+          variant: 'danger',
+          solid: true,
+          autoHideDelay: 5000,
+        });
+      },
       go_to_top() {
-        window.scrollTo(0, 0);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       },
       createTable() {
         for (let index = 0; index < this.table_count; index++)
@@ -71,18 +78,21 @@
     },
     created() {
       window.addEventListener('scroll', this.handleScroll);
+      window.addEventListener('restaurant:error', this.handleRuntimeError);
 
       // mod to work with boostrap 5
       this.$root.$on('bv::tooltip::shown', bvEvent => {
         const arrow = document.querySelector(`#${bvEvent.componentId} .arrow`);
-        arrow.classList.replace('arrow', 'tooltip-arrow');
+        if (arrow)
+          arrow.classList.replace('arrow', 'tooltip-arrow');
       });
 
       this.createTable();
       this.createChef();
     },
-    destroyed() {
+    beforeDestroy() {
       window.removeEventListener('scroll', this.handleScroll);
+      window.removeEventListener('restaurant:error', this.handleRuntimeError);
     },
     mounted() {
       this.$root.$bvModal.show('welcome-modal');

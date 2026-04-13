@@ -10,8 +10,8 @@
         <span class='food-status' :class='status_class'></span>
         <label>{{ status_text }}</label>
       </span>
-      <a class='btn btn-sm' :class='button_class'
-        @click.prevent='toggle_select'>{{ food.name }}</a>
+      <button type='button' class='btn btn-sm' :class='button_class'
+        @click='toggle_select'>{{ food.name }}</button>
     </div>
   </div>
 

@@ -41,13 +41,13 @@ export default {
     },
     async fetch_foods() {
       try {
-        const response = await fetch('/assets/data.json');
-        this.foods = (await response.json()).map(f => {
+        const foods = await window.AppRuntime.loadJson('/assets/data.json');
+        this.foods = foods.map(f => {
           f.selected = false;
           return f;
         });
       } catch(ex) {
-        console.log('Error fetch foods', ex);
+        window.AppRuntime.reportError('Unable to load the food catalog.', ex, { source: 'foods' });
       };
     },
     handle_ok(ev) {

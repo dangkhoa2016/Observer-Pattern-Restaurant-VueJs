@@ -25,7 +25,7 @@
 
   <welcome-modal></welcome-modal>
 
-  <a href='#' @click.prevent='go_to_top' :class="['to-top text-success', { 'd-none': !show_go_to_top }]">
+  <button type='button' @click='go_to_top' :class="['btn btn-link to-top text-success', { 'd-none': !show_go_to_top }]" aria-label='Go to top'>
     <i class='far fa-arrow-alt-circle-up fa-2x'></i>
-  </a>
+  </button>
 </div>

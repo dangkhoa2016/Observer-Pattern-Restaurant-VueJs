@@ -1,31 +1,16 @@
 /*jshint esversion: 9 */
 
 (async () => {
+  const runtime = window.AppRuntime;
+  const { loadModule } = window['vue2-sfc-loader'];
 
   window.app = {};
 
-  const loadHtml = function (file) {
-    return new Promise((resolve) => {
-      fetch(`/assets/${file}.html`)
-        .then(res => {
-          if (res.status !== 200)
-            throw new Error(`File [${file}] does not exists.`);
-          return res.text();
-        }).then(html => {
-          window.app.html = html;
-          resolve();
-        }).catch(ex => {
-          console.log(`Error load html: ${file}`, ex);
-          resolve();
-        });
-    });
-  };
-
-  await loadHtml('app');
-
-  loadModule('/vue/restaurant.vue', window.options)
-    .then(component => {
-      window.app = component;
-    });
+  try {
+    window.app.html = await runtime.loadHtml('/assets/app.html');
+    window.app = await loadModule('/vue/restaurant.vue', runtime.getVueSfcOptions());
+  } catch (error) {
+    runtime.reportError('Unable to bootstrap the restaurant application.', error, { source: 'bootstrap' });
+  }
 
 })();

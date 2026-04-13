@@ -26,9 +26,10 @@ export default {
       closed: false,
       slogan: '',
       orders: [],
-      is_hight_light: false,
+      is_highlight: false,
       tooltip_title: 'Receive info from Assistant',
       base_unsubscribe: null,
+      timeout_unhighlight: null,
     };
   },
   methods: {
@@ -43,14 +44,14 @@ export default {
       this.setConfirmDeleteTableId(this.table_id);
     },
     hide_tooltip() {
-      this.is_hight_light = false;
+      this.is_highlight = false;
       this.$root.$emit('bv::hide::tooltip', `tb-${this.table_id}`);
     },
     show_tooltip() {
-      this.is_hight_light = true;
+      this.is_highlight = true;
       this.$root.$emit('bv::show::tooltip', `tb-${this.table_id}`);
     },
-    hight_light_test(unhighlight = false) {
+    highlight_test(unhighlight = false) {
       if (unhighlight) {
         this.hide_tooltip();
         this.clear_timeout();
@@ -69,18 +70,19 @@ export default {
       this.timeout_unhighlight = null;
     },
     subscribe() {
-      this.base_unsubscribe = this.$watch('completedFoodsForTable', (completed) => {
+      if (this.base_unsubscribe)
+        return;
+
+      this.base_unsubscribe = this.$watch(() => this.completedFoodsForTable, completed => {
         if (!Array.isArray(completed) || completed.length === 0)
           return;
 
-        this.hight_light_test();
+        this.highlight_test();
 
-        completed.map(order => {
-          let found = this.orders.find(o => o.id === order.id);
-          if (found) {
+        completed.forEach(order => {
+          const found = this.orders.find(item => item.id === order.id);
+          if (found)
             found.status = order.status;
-            console.log(`Table [${this.table_id}] is eating Food [${order.food.name}]`);
-          }
         });
       });
     },
@@ -106,7 +108,7 @@ export default {
     ...Vuex.mapGetters({
       menuOpenForTable: 'restaurantStore/getCurrentTable',
       selectedFoods: 'restaurantStore/getSelectedFoods',
-      completedFoodsForTable: 'restaurantStore/getCompletedFoodsForTable',
+      getCompletedFoodsForTable: 'restaurantStore/getCompletedFoodsForTable',
     }),
     offset_left() {
       return this.index * 20;
@@ -114,8 +116,11 @@ export default {
     table_id() {
       return this.table.id;
     },
+    completedFoodsForTable() {
+      return this.getCompletedFoodsForTable(this.table_id);
+    },
     card_class() {
-      return ['draggable w-20 float-start', { 'hight-light': this.is_hight_light }];
+      return ['draggable w-20 float-start', { highlight: this.is_highlight }];
     },
   },
   mounted() {
@@ -124,5 +129,9 @@ export default {
   },
   created() {
     this.subscribe();
+  },
+  beforeDestroy() {
+    this.unsubscribe();
+    this.clear_timeout();
   },
 };

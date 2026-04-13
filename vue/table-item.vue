@@ -11,19 +11,19 @@
     </div>
 
     <div class='action mt-2'>
-      <b-button href='#' size='sm' variant='primary' @click.prevent='showModalFoods'
+      <b-button type='button' size='sm' variant='primary' @click='showModalFoods'
         class='btn-add-foods float-start'>Add foods</b-button>
       <div class='float-end'>
-        <b-button href='#' v-b-tooltip.hover title='Remove this table'
-          class='btn-remove' size='sm' variant='dark' @click.prevent='showConfirmRemove'>
+        <b-button type='button' v-b-tooltip.hover title='Remove this table'
+          class='btn-remove' size='sm' variant='dark' @click='showConfirmRemove'>
           <span class='fas fa-trash-alt'></span>
         </b-button>
-        <b-button href='#' v-if='!base_unsubscribe' v-b-tooltip.hover title='Subscribe news from Assistant'
-          class='btn-subscribe' size='sm' variant='success' @click.prevent='subscribe'>
+        <b-button type='button' v-if='!base_unsubscribe' v-b-tooltip.hover title='Subscribe news from Assistant'
+          class='btn-subscribe' size='sm' variant='success' @click='subscribe'>
           <span class='fas fa-rss'></span>
         </b-button>
-        <b-button href='#' v-else v-b-tooltip.hover title='Unsubscribe news from Assistant'
-          class='btn-unsubscribe' size='sm' variant='danger' @click.prevent='unsubscribe'>
+        <b-button type='button' v-else v-b-tooltip.hover title='Unsubscribe news from Assistant'
+          class='btn-unsubscribe' size='sm' variant='danger' @click='unsubscribe'>
           <span class='fas fa-eye-slash'></span>
         </b-button>
       </div>

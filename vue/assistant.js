@@ -9,16 +9,16 @@ export default {
       sendCompletedFoodsForTable: 'restaurantStore/sendCompletedFoodsForTable',
     }),
     hide_tooltip() {
-      this.is_hight_light = false;
+      this.is_highlight = false;
       this.$root.$emit('bv::hide::tooltip', `assistant${this._uid}`);
     },
     show_tooltip(message) {
       this.tooltip_title = message;
-      this.is_hight_light = true;
+      this.is_highlight = true;
 
       setTimeout(() => { this.$root.$emit('bv::show::tooltip', `assistant${this._uid}`); }, 5);
     },
-    hight_light_test(message, unhighlight = false) {
+    highlight_test(message, unhighlight = false) {
       if (unhighlight) {
         this.hide_tooltip();
         this.clear_timeout();
@@ -36,44 +36,46 @@ export default {
       clearTimeout(this.timeout_unhighlight);
       this.timeout_unhighlight = null;
     },
-    send_to_chefs() {
+    schedule_send_to_chefs(chef_id = null) {
       if (this.orders.length === 0)
         return;
 
-      const time_wait = this.timeout_to_send * 1000;
-      console.log(`Wait for ${time_wait} to send orders to chefs.`);
+      if (chef_id === null && this.dispatch_timeout_id)
+        return;
 
-      setTimeout(() => {
-        for (let i = 0; i < this.chefs.length; i++)
-          this.send_to_chef(this.chefs[i].id);
-      }, time_wait);
+      const wait_time = this.timeout_to_send * 1000;
+      const dispatch = () => {
+        if (chef_id === null) {
+          this.dispatch_timeout_id = null;
+          this.chefs.forEach(chef => this.send_to_chef(chef.id));
+          return;
+        }
+
+        this.send_to_chef(chef_id);
+      };
+
+      const timeout_id = setTimeout(dispatch, wait_time);
+      if (chef_id === null)
+        this.dispatch_timeout_id = timeout_id;
     },
     send_to_chef(chef_id) {
       const chef = this.getChefInfo(chef_id);
       if (!chef)
         return;
 
-      if (chef.status !== this.$chef_status_free) {
-        console.log(`Chef [${chef.id}] is busy.`);
+      if (chef.status !== this.$chef_status_free)
         return;
-      }
 
-      if (this.orders.length === 0) {
-        console.log('No orders.');
+      if (this.orders.length === 0)
         return;
-      }
 
       const [order] = this.orders.splice(0, 1);
-      console.log(`Send Order [${order.id}] to Chef [${chef.id}]`);
       this.add_info(chef.id, order, 'warning bg-opacity-75', 'received');
       this.sendOrderToChef({ chef_id, order });
     },
     add_info(chef_id, order, bg, action) {
       const date =  new Date();
       const id = date.valueOf() + chef_id;
-      if (action === 'completed')
-        console.log(`Chef [${chef_id}] completed Order [${order.id}:${order.food.name}]`);
-
       this.infos.push({ chef_id, order, bg, action, date, id, closed: false });
     },
     remove_log(log_id) {
@@ -84,39 +86,31 @@ export default {
       this.infos.splice(index, 1);
     },
     assign_job(chef_id) {
-      if (this.orders.length === 0) {
-        console.log('No orders.');
+      if (this.orders.length === 0)
         return;
-      }
 
-      const time_wait = this.timeout_to_send * 1000;
-
-      setTimeout(() => {
-        for (const chef of this.chefs) {
-          if (chef.id === chef_id) {
-            this.send_to_chef(chef.id);
-            break;
-          }
-        };
-      }, time_wait);
+      this.schedule_send_to_chefs(chef_id);
     },
    },
   data() {
     return {
       tooltip_title: '',
       orders: [],
-      is_hight_light: false,
+      is_highlight: false,
       timeout_to_send: 3,
       timeout_unhighlight: null,
+      dispatch_timeout_id: null,
       infos: [],
     };
   },
   watch: {
     selectedFoods(orders) {
-      this.hight_light_test(`Receive ${orders.length} order(s) from Table [${this.currentTable}]`);
+      if (!Array.isArray(orders) || orders.length === 0)
+        return;
+
+      this.highlight_test(`Receive ${orders.length} order(s) from Table [${this.currentTable}]`);
       this.orders = [...this.orders, ...orders];
-      console.log(`Receive ${orders.length} order(s)`, orders, 'from table', this.currentTable, 'total', this.orders.length);
-      this.send_to_chefs();
+      this.schedule_send_to_chefs();
     },
     completed_orders(orders) {
       if (!Array.isArray(orders) || orders.length === 0)
@@ -125,9 +119,7 @@ export default {
       const completed = orders.map(info => {
         this.add_info(info.chef_id, info.order, 'info bg-opacity-75', 'completed');
 
-        this.hight_light_test(`Receive completed food from Chef [${info.chef_id}]`);
-
-        console.log('Remain: ', this.orders);
+        this.highlight_test(`Receive completed food from Chef [${info.chef_id}]`);
         this.assign_job(info.chef_id);
 
         return info.order;
@@ -145,7 +137,7 @@ export default {
       getOrdersByStatus: 'restaurantStore/getOrdersByStatus',
     }),
     card_class() {
-      return ['assistant', { 'hight-light': this.is_hight_light }];
+      return ['assistant', { highlight: this.is_highlight }];
     },
     tooltip_config() {
       return {
@@ -157,5 +149,13 @@ export default {
     completed_orders() {
       return this.getOrdersByStatus(this.$order_status_done);
     },
+  },
+  beforeDestroy() {
+    this.clear_timeout();
+
+    if (this.dispatch_timeout_id) {
+      clearTimeout(this.dispatch_timeout_id);
+      this.dispatch_timeout_id = null;
+    }
   },
 };

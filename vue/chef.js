@@ -9,7 +9,7 @@ export default {
       setChefCooking: 'restaurantStore/setChefCooking',
     }),
     complete_order() {
-      this.hight_light_test();
+      this.highlight_test();
 
       setTimeout(() => {
         this.setChefCooking({ chef_id: this.chef.id, chef_status: this.$chef_status_free, order_status: 3 });
@@ -17,20 +17,17 @@ export default {
       }, this.$animated_time);
     },
     process_order() {
-      //this.hight_light_test(true);
-
-      // processing
       this.setChefCooking({ chef_id: this.chef.id, chef_status: this.$chef_status_processing, order_status: 2 });
     },
-    hight_light_test(unhighlight = false) {
+    highlight_test(unhighlight = false) {
       if (unhighlight) {
-        this.is_hight_light = false;
+        this.is_highlight = false;
         this.clear_timeout();
       }
 
-      this.is_hight_light = true;
+      this.is_highlight = true;
       this.clear_timeout();
-      this.timeout_unhighlight = setTimeout(() => { this.is_hight_light = false; }, this.$tooltip_chef_time);
+      this.timeout_unhighlight = setTimeout(() => { this.is_highlight = false; }, this.$tooltip_chef_time);
     },
     clear_timeout() {
       if (!this.timeout_unhighlight)
@@ -50,7 +47,7 @@ export default {
     return {
       slogan: '',
       current_order: null,
-      is_hight_light: false,
+      is_highlight: false,
       timeout_unhighlight: null,
       progress_icon: 'fas fa-clipboard-check'
     };
@@ -80,7 +77,7 @@ export default {
         'card w-25 chef float-start',
         {
           'processing': this.is_processing,
-          'hight-light': this.is_hight_light
+          highlight: this.is_highlight
         }
       ];
     },
@@ -96,5 +93,8 @@ export default {
       this.current_order = val;
       this.process_order();
     },
+  },
+  beforeDestroy() {
+    this.clear_timeout();
   },
 };
