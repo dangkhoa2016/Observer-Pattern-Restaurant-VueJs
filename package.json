@@ -1,0 +1,12 @@
+{
+  "name": "observer-pattern-restaurant-vuejs",
+  "version": "1.0.0",
+  "private": false,
+  "scripts": {
+    "serve:test": "node ./scripts/serve-static.js",
+    "test:smoke": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.59.1"
+  }
+}

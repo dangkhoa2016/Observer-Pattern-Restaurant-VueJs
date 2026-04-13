@@ -14,3 +14,8 @@ This is a browser-only Vue 2 sample that demonstrates the Observer Pattern in a 
 - Exposed `Order.table_id` as a public read-only field for traceability.
 - Cleaned up highlight naming, button semantics and live-region accessibility for assistant and progress updates.
 - Added baseline `.editorconfig`, ESLint and Prettier configuration for future maintenance.
+
+## Smoke test
+- Install dependencies with `npm install`.
+- Install the browser runtime once with `npx playwright install chromium`.
+- Run the main flow smoke test with `npm run test:smoke`.
