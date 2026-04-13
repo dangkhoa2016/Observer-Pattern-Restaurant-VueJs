@@ -6,7 +6,7 @@
     no-close-on-backdrop='true'>
 
     <template #modal-header='{ close }'>
-      <h4 class='mb-0'>Add foods</h4>
+      <h4 class='mb-0'>Add Items</h4>
       <button type='button' class='btn btn-close btn-sm' data-bs-dismiss='modal'
         aria-label='Close' @click.prevent='close()'></button>
     </template>

@@ -108,7 +108,7 @@ export default {
       if (!Array.isArray(orders) || orders.length === 0)
         return;
 
-      this.highlight_test(`Receive ${orders.length} order(s) from Table [${this.currentTable}]`);
+      this.highlight_test(`Received ${orders.length} order(s) from Table [${this.currentTable}]`);
       this.orders = [...this.orders, ...orders];
       this.schedule_send_to_chefs();
     },
@@ -119,7 +119,7 @@ export default {
       const completed = orders.map(info => {
         this.add_info(info.chef_id, info.order, 'info bg-opacity-75', 'completed');
 
-        this.highlight_test(`Receive completed food from Chef [${info.chef_id}]`);
+        this.highlight_test(`Received a completed dish from Chef [${info.chef_id}]`);
         this.assign_job(info.chef_id);
 
         return info.order;

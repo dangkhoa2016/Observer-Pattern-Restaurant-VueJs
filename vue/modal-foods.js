@@ -54,7 +54,7 @@ export default {
       this.message = '';
       if (this.selectedFoods.length === 0) {
         ev.preventDefault();
-        this.message = 'Please select at least one food !';
+        this.message = 'Please select at least one item.';
       } else
         this.setSelectedFoods(this.selectedFoods);
     },

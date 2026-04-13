@@ -12,7 +12,7 @@
     </template>
 
     <div class='modal-body'>
-      <p class='mb-0'>Are you sure to remove this table ?</p>
+      <p class='mb-0'>Are you sure you want to remove this table?</p>
     </div>
   </b-modal>
 

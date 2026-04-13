@@ -4,7 +4,7 @@ test.describe('restaurant smoke flow', () => {
   test('creates an order and completes the main flow', async ({ page }) => {
     await page.goto('/');
 
-    await expect(page.getByRole('heading', { name: 'Observer Pattern - Restaurant - Vue JS 2' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Observer Pattern - Restaurant - Vue 2' })).toBeVisible();
 
     const welcomeModal = page.locator('#welcome-modal');
     await expect(welcomeModal).toBeVisible();
@@ -14,7 +14,7 @@ test.describe('restaurant smoke flow', () => {
     await expect(page.getByText('Table: 1')).toBeVisible();
     await expect(page.getByText('Chef: 1')).toBeVisible();
 
-    await page.getByRole('button', { name: 'Add foods' }).first().click();
+    await page.getByRole('button', { name: 'Add Items' }).first().click();
     const foodsModal = page.locator('#modal-foods');
     await expect(foodsModal).toBeVisible();
 
@@ -22,7 +22,7 @@ test.describe('restaurant smoke flow', () => {
     await foodsModal.getByRole('button', { name: 'Order' }).click();
     await expect(foodsModal).toBeHidden();
 
-    await expect(page.getByText('Pending queue: 1 order(s)')).toBeVisible();
+    await expect(page.getByText('Pending orders: 1')).toBeVisible();
     await expect(page.getByText('Chef 1 has received')).toBeVisible({ timeout: 10000 });
 
     const chefProgressButton = page.locator('.cook-progress .btn-complete').first();

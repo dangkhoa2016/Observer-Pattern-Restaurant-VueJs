@@ -15,7 +15,7 @@ export default {
   data() {
     return {
       inactive_class: 'far fa-square',
-      not_select_text: 'Not select',
+      not_select_text: 'Not selected',
       selected_text: 'Selected',
       bg_color: '',
       hover_color: '',

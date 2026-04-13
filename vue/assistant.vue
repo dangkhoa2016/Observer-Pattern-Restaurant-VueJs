@@ -4,7 +4,7 @@
     header='Assistant' header-tag='h5' header-class='bg-warning'
     footer-class='p-0' v-b-tooltip.sync='tooltip_config'>
 
-    <div class='small text-muted'>Pending queue: {{ orders.length }} order(s)</div>
+    <div class='small text-muted'>Pending orders: {{ orders.length }}</div>
 
     <template #footer>
       <div class='assistant-log-stream' aria-live='polite' aria-atomic='false' role='status'>

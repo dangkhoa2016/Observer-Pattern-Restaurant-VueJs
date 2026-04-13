@@ -12,7 +12,7 @@
       </div>
     </div>
     <div class='card-footer bg-info text-white'>
-      Slogan: "{{ slogan }}"
+      Tagline: "{{ slogan }}"
     </div>
   </div>
 

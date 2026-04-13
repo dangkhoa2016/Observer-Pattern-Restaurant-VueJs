@@ -1,6 +1,6 @@
 /*jshint esversion: 9 */
-const slogans = ['For the President...', 'The best of the best...',
-  'Only very important person...', 'Greatest person...'];
+const slogans = ['Fit for a president...', 'Only the best...',
+  'Reserved for VIPs...', 'For our most valued guests...'];
 import OrderFood from './order-food.vue';
 
 export default {
@@ -27,7 +27,7 @@ export default {
       slogan: '',
       orders: [],
       is_highlight: false,
-      tooltip_title: 'Receive info from Assistant',
+      tooltip_title: 'Receive updates from the assistant',
       base_unsubscribe: null,
       timeout_unhighlight: null,
     };

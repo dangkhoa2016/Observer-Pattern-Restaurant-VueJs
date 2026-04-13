@@ -33,7 +33,7 @@ export default {
       return {
         placement: 'right',
         trigger: 'hover',
-        title: 'Test button: click to complete progress',
+        title: 'Test button: click to complete the progress',
         customClass: 'custom-tooltip bs-tooltip-end',
       };
     },
