@@ -5,6 +5,8 @@
 
 Phiên bản Vue hiện cũng cố ý đồng bộ nhãn giao diện, slogan, câu chữ ở activity log và các mốc timeout với bản plain JavaScript để hai dự án dễ so sánh hơn.
 
+Để xem hướng dẫn từng bước, hãy mở bản tiếng Anh tại [How_it_work.md](./How_it_work.md) hoặc bản tiếng Việt tại [How_it_work.vi.md](./How_it_work.vi.md).
+
 Để đối chiếu nhanh giữa bản Vue 2 và bản plain JavaScript, hãy xem [PARITY_GUIDE.vi.md](./PARITY_GUIDE.vi.md) hoặc bản tiếng Anh [PARITY_GUIDE.md](./PARITY_GUIDE.md).
 
 Dự án không dùng build tool. Các Vue single-file component được nạp động ngay trong trình duyệt, nên mã nguồn khá nhẹ và dễ quan sát.
@@ -66,32 +68,9 @@ flowchart TD
 
 Ứng dụng khởi động từ `index.html`, nạp helper runtime trước, rồi tiếp tục lấy template, store, data, và các Vue component trực tiếp trong trình duyệt.
 
-## Ảnh Chụp Màn Hình
-### Màn hình đang tải ứng dụng
-![Application loading](./screenshots/app-loading.png)
+## Hướng Dẫn Chi Tiết
 
-### Màn hình sau khi ứng dụng sẵn sàng
-![Application ready state](./screenshots/app-loaded.png)
-
-### Hộp thoại thêm món
-![Add dishes modal](./screenshots/add-dishes.png)
-
-### Khu vực thao tác thêm bàn
-![Add table action panel](./screenshots/add-table.png)
-
-### Hộp thoại xác nhận xóa bàn
-![Remove table confirmation](./screenshots/confirm-delete.png)
-
-### Tooltip và điều khiển subscribe
-![Tooltips and subscription controls](./screenshots/tooltip.png)
-
-### Ví dụ luồng xử lý món ăn
-![Processing flow step 1](./screenshots/process-1.png)
-![Processing flow step 2](./screenshots/process-2.png)
-![Processing flow step 3](./screenshots/process-3.png)
-![Processing flow step 4](./screenshots/process-4.png)
-![Processing flow step 5](./screenshots/process-5.png)
-![Processing flow step 6](./screenshots/process-6.png)
+Để xem đầy đủ ảnh chụp màn hình theo từng bước, ví dụ tooltip, và toàn bộ chuỗi workflow, hãy mở [How_it_work.vi.md](./How_it_work.vi.md) hoặc bản tiếng Anh [How_it_work.md](./How_it_work.md).
 
 ## Kiến Trúc Runtime
 - Ứng dụng chạy hoàn toàn trong trình duyệt.
@@ -129,6 +108,8 @@ flowchart TD
 ├── vue/
 │   ├── stores/
 │   └── *.vue / *.js
+├── How_it_work.md
+├── How_it_work.vi.md
 ├── index.html
 ├── package.json
 └── playwright.config.js

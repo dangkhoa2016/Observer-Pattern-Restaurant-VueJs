@@ -5,6 +5,8 @@ This project is a browser-only Vue 2 demo that simulates a restaurant workflow u
 
 The Vue implementation now intentionally mirrors the plain JavaScript project in labels, slogans, assistant log phrasing, and timing constants so the two demos stay easier to compare.
 
+For a step-by-step walkthrough, see the English guide [How_it_work.md](./How_it_work.md) or the Vietnamese version [How_it_work.vi.md](./How_it_work.vi.md).
+
 For a cross-project mapping between the Vue 2 and plain JavaScript implementations, see [PARITY_GUIDE.md](./PARITY_GUIDE.md) or the Vietnamese version [PARITY_GUIDE.vi.md](./PARITY_GUIDE.vi.md).
 
 The app does not use a build tool. Vue single-file components are loaded directly in the browser, which makes the project lightweight and easy to inspect.
@@ -66,32 +68,9 @@ flowchart TD
 
 The application boots from `index.html`, loads runtime helpers first, then pulls templates, store logic, data, and Vue components directly in the browser.
 
-## Screenshots
-### Application loading
-![Application loading](./screenshots/app-loading.png)
+## Walkthrough
 
-### Application ready state
-![Application ready state](./screenshots/app-loaded.png)
-
-### Add dishes modal
-![Add dishes modal](./screenshots/add-dishes.png)
-
-### Add table action panel
-![Add table action panel](./screenshots/add-table.png)
-
-### Remove table confirmation
-![Remove table confirmation](./screenshots/confirm-delete.png)
-
-### Tooltips and subscription controls
-![Tooltips and subscription controls](./screenshots/tooltip.png)
-
-### Processing flow examples
-![Processing flow step 1](./screenshots/process-1.png)
-![Processing flow step 2](./screenshots/process-2.png)
-![Processing flow step 3](./screenshots/process-3.png)
-![Processing flow step 4](./screenshots/process-4.png)
-![Processing flow step 5](./screenshots/process-5.png)
-![Processing flow step 6](./screenshots/process-6.png)
+For the full screen-by-screen walkthrough, tooltip examples, and workflow sequence, see [How_it_work.md](./How_it_work.md) or the Vietnamese version [How_it_work.vi.md](./How_it_work.vi.md).
 
 ## Runtime Architecture
 - The application runs entirely in the browser.
@@ -129,6 +108,8 @@ The application boots from `index.html`, loads runtime helpers first, then pulls
 ├── vue/
 │   ├── stores/
 │   └── *.vue / *.js
+├── How_it_work.md
+├── How_it_work.vi.md
 ├── index.html
 ├── package.json
 └── playwright.config.js
