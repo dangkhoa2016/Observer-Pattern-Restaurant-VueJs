@@ -3,6 +3,10 @@
 
 Đây là dự án demo Vue 2 chạy trực tiếp trên trình duyệt để mô phỏng quy trình vận hành của một nhà hàng bằng Observer Pattern. Bàn ăn tạo order, trợ lý tiếp nhận và phân phối order cho đầu bếp, đầu bếp xử lý món ăn, sau đó bàn ăn phản ứng khi món đã sẵn sàng.
 
+Phiên bản Vue hiện cũng cố ý đồng bộ nhãn giao diện, slogan, câu chữ ở activity log và các mốc timeout với bản plain JavaScript để hai dự án dễ so sánh hơn.
+
+Để đối chiếu nhanh giữa bản Vue 2 và bản plain JavaScript, hãy xem [PARITY_GUIDE.vi.md](./PARITY_GUIDE.vi.md) hoặc bản tiếng Anh [PARITY_GUIDE.md](./PARITY_GUIDE.md).
+
 Dự án không dùng build tool. Các Vue single-file component được nạp động ngay trong trình duyệt, nên mã nguồn khá nhẹ và dễ quan sát.
 
 ## Công Nghệ Sử Dụng
@@ -20,6 +24,7 @@ Dự án không dùng build tool. Các Vue single-file component được nạp 
 ## Dự Án Minh Họa Điều Gì
 - Ứng dụng Vue 2 chạy trực tiếp trên trình duyệt, không dùng Webpack, Vite, hay bundler.
 - Một luồng Observer Pattern áp dụng vào bài toán nhà hàng.
+- Nhãn giao diện, tooltip, slogan, và activity log được đồng bộ với bản plain JavaScript.
 - Cách nạp động file `.vue` và `.js` trong runtime.
 - Lớp quản lý trạng thái bằng Vuex để theo dõi bàn ăn, đầu bếp, order, và trạng thái giao diện.
 - Smoke test bằng Playwright cho luồng người dùng chính.
@@ -69,7 +74,7 @@ flowchart TD
 ![Application ready state](./screenshots/app-loaded.png)
 
 ### Hộp thoại thêm món
-![Add items modal](./screenshots/add-dishes.png)
+![Add dishes modal](./screenshots/add-dishes.png)
 
 ### Khu vực thao tác thêm bàn
 ![Add table action panel](./screenshots/add-table.png)
@@ -101,7 +106,7 @@ flowchart TD
 - Thêm cache cho `assets/app.html`, `assets/data.json`, và các request lấy Vue component.
 - Sửa lỗi món hoàn tất bị ghi đè bằng cách lưu kết quả theo từng bàn thay vì dùng một danh sách toàn cục.
 - Expose `Order.table_id` như một trường public chỉ đọc để dễ truy vết.
-- Chuẩn hóa nhiều nhãn giao diện và nội dung tiếng Anh.
+- Chuẩn hóa nhãn giao diện, slogan, tooltip, và activity log của bản Vue để khớp hơn với bản plain JavaScript.
 - Cải thiện semantics của button, live-region cho accessibility, và độ tương phản của trạng thái highlight.
 - Thêm cấu hình cơ bản cho `.editorconfig`, ESLint, và Prettier.
 - Thêm smoke test Playwright cho luồng chính.

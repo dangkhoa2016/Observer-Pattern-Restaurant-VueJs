@@ -6,22 +6,22 @@ export default {
   components: { FoodItem, },
   computed: {
     ...Vuex.mapGetters({
-      menuOpenForTable: 'restaurantStore/getCurrentTable',
+      currentTableId: 'restaurantStore/getCurrentTableId',
     }),
     selectedFoods() {
-      return this.foods.filter(food => food.selected).map(f => (new Order(this.menuOpenForTable, f)));
+      return this.foods.filter(food => food.selected).map(food => (new Order(this.currentTableId, food)));
     },
   },
   watch: {
-    menuOpenForTable(table) {
-      if (table) {
-        this.reset_food_states();
+    currentTableId(tableId) {
+      if (tableId) {
+        this.resetFoodStates();
         this.$bvModal.show('modal-foods');
       }
     },
   },
   mounted() {
-    this.fetch_foods();
+    this.fetchFoods();
   },
   data() {
     return {
@@ -32,14 +32,14 @@ export default {
   methods: {
     ...Vuex.mapActions({
       setSelectedFoods: 'restaurantStore/setSelectedFoods',
-      showModalFoodsForTable: 'restaurantStore/showModalFoodsForTable',
+      setCurrentTableId: 'restaurantStore/setCurrentTableId',
     }),
-    reset_food_states() {
+    resetFoodStates() {
       this.foods.forEach(food => {
         food.selected = false;
       });
     },
-    async fetch_foods() {
+    async fetchFoods() {
       try {
         const foods = await window.AppRuntime.loadJson('/assets/data.json');
         this.foods = foods.map(f => {
@@ -47,19 +47,19 @@ export default {
           return f;
         });
       } catch(ex) {
-        window.AppRuntime.reportError('Unable to load the food catalog.', ex, { source: 'foods' });
+        window.AppRuntime.reportError(this.$appMessages.MENU_LOAD_ERROR, ex, { source: 'foods' });
       };
     },
-    handle_ok(ev) {
+    handleOk(ev) {
       this.message = '';
       if (this.selectedFoods.length === 0) {
         ev.preventDefault();
-        this.message = 'Please select at least one item.';
+        this.message = this.$appMessages.FOOD_SELECTION_REQUIRED;
       } else
         this.setSelectedFoods(this.selectedFoods);
     },
-    handle_hidden() {
-      this.showModalFoodsForTable(null);
+    handleHidden() {
+      this.setCurrentTableId(null);
     },
   },
 };

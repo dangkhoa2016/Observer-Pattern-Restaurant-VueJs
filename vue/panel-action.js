@@ -4,7 +4,7 @@ export default {
   data() {
     return {
       isShow: false,
-      component_init: true,
+      componentInit: true,
     };
   },
   methods: {
@@ -13,11 +13,13 @@ export default {
     }),
   },
   mounted() {
-    setTimeout(() => { this.component_init = false; }, this.$animated_time);
+    setTimeout(() => {
+      this.componentInit = false;
+    }, this.$appTimeouts.UI_ANIMATION_MS);
   },
   computed: {
-    panel_class() {
-      return [{ 'slide-in': this.isShow, 'slide-out': !this.isShow, 'init': this.component_init }];
+    panelClass() {
+      return [{ 'slide-in': this.isShow, 'slide-out': !this.isShow, 'init': this.componentInit }];
     },
   },
 };

@@ -3,6 +3,10 @@
 
 This project is a browser-only Vue 2 demo that simulates a restaurant workflow using the Observer Pattern. Tables place orders, an assistant dispatches those orders to chefs, chefs process the dishes, and each table reacts when its food is ready.
 
+The Vue implementation now intentionally mirrors the plain JavaScript project in labels, slogans, assistant log phrasing, and timing constants so the two demos stay easier to compare.
+
+For a cross-project mapping between the Vue 2 and plain JavaScript implementations, see [PARITY_GUIDE.md](./PARITY_GUIDE.md) or the Vietnamese version [PARITY_GUIDE.vi.md](./PARITY_GUIDE.vi.md).
+
 The app does not use a build tool. Vue single-file components are loaded directly in the browser, which makes the project lightweight and easy to inspect.
 
 ## Technologies Used
@@ -20,12 +24,13 @@ The app does not use a build tool. Vue single-file components are loaded directl
 ## What This Demo Shows
 - A plain-browser Vue 2 application without Webpack, Vite, or a bundler.
 - An Observer Pattern workflow applied to a restaurant scenario.
+- UI labels, tooltips, slogans, and assistant activity text aligned with the plain JavaScript version.
 - Dynamic loading of `.vue` and `.js` files at runtime.
 - A Vuex-based state layer that tracks tables, chefs, orders, and UI state.
 - A Playwright smoke test for the main user flow.
 
 ## Main Flow
-1. A table opens the menu and selects one or more items.
+1. A table opens the menu and selects one or more dishes.
 2. The assistant receives the orders and assigns them to available chefs.
 3. Chefs process the dishes.
 4. The assistant receives completion updates from chefs.
@@ -68,8 +73,8 @@ The application boots from `index.html`, loads runtime helpers first, then pulls
 ### Application ready state
 ![Application ready state](./screenshots/app-loaded.png)
 
-### Add items modal
-![Add items modal](./screenshots/add-dishes.png)
+### Add dishes modal
+![Add dishes modal](./screenshots/add-dishes.png)
 
 ### Add table action panel
 ![Add table action panel](./screenshots/add-table.png)
@@ -101,7 +106,7 @@ The application boots from `index.html`, loads runtime helpers first, then pulls
 - Added cache-backed loading for `assets/app.html`, `assets/data.json`, and Vue component fetches.
 - Fixed completed dish delivery so results are stored per table instead of overwriting one global list.
 - Exposed `Order.table_id` as a public read-only field for traceability.
-- Standardized several UI labels and English text.
+- Standardized the Vue labels, slogans, tooltips, and assistant log text to match the plain JavaScript version.
 - Improved button semantics, live-region accessibility, and contrast for highlighted states.
 - Added baseline `.editorconfig`, ESLint, and Prettier configuration.
 - Added a Playwright smoke test for the main flow.
@@ -176,7 +181,7 @@ npm run test:smoke
 The smoke test covers the primary workflow:
 - Open the app
 - Close the welcome modal
-- Add an item to a table
+- Add dishes to a table
 - Verify the assistant receives the order
 - Complete the chef processing step
 - Complete the table consumption step

@@ -1,18 +1,18 @@
 <template>
   
   <b-modal id='modal-delete-table'
-    ok-title='Yes' centered @hidden='handle_hidden'
-    cancel-title='Close' ok-variant='danger'
-    no-close-on-backdrop='true' @ok='handle_ok' size='md'>
+    :ok-title='$appLabels.YES' centered @hidden='handleHidden'
+    :cancel-title='$appLabels.CLOSE' ok-variant='danger'
+    no-close-on-backdrop='true' @ok='handleOk' size='md'>
 
     <template #modal-header='{ close }'>
-      <h4 class='mb-0'>Please confirm</h4>
+      <h4 class='mb-0'>{{ $appLabels.CONFIRM_ACTION }}</h4>
       <button type='button' class='btn btn-close btn-sm' data-bs-dismiss='modal'
         aria-label='Close' @click.prevent='close()'></button>
     </template>
 
     <div class='modal-body'>
-      <p class='mb-0'>Are you sure you want to remove this table?</p>
+      <p class='mb-0'>{{ $appMessages.TABLE_REMOVE_CONFIRM }}</p>
     </div>
   </b-modal>
 

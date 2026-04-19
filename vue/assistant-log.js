@@ -15,16 +15,18 @@ export default {
   created() {
     setTimeout(() => {
       this.closed = true;
-    }, 8000);
+    }, this.$appTimeouts.ASSISTANT_INFO_MS);
   },
   watch: {
     closed(val) {
       if (val)
-        setTimeout(() => { this.$emit('remove', this.info.id); }, this.$animated_time);
+        setTimeout(() => {
+          this.$emit('remove', this.info.id);
+        }, this.$appTimeouts.UI_ANIMATION_MS);
     },
   },
   computed: {
-    info_class() {
+    infoClass() {
       return [`animate info bg-${this.info.bg} mb-3 p-2`, { closed: this.closed }];
     },
   },

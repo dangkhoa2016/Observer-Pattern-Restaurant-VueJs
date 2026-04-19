@@ -8,31 +8,31 @@ export default {
     },
   },
   methods: {
-    eat_complete() {
+    handleEatComplete() {
       this.completed = true;
       setTimeout(() => {
         this.$emit('eat-complete', this.order.id);
-      }, this.$animated_time);
+      }, this.$appTimeouts.UI_ANIMATION_MS);
     },
   },
   computed: {
-    tooltip_config() {
+    tooltipConfig() {
       return {
         placement: 'right', trigger: 'hover',
         customClass: 'custom-tooltip bs-tooltip-end',
       };
     },
-    order_class() {
+    orderClass() {
       return ['animate', { 'closed': this.completed }];
     },
-    food_is_cooked() {
-      return this.order.status === this.$order_status_done;
+    foodIsCooked() {
+      return this.order.status === this.$orderStatus.DONE;
     },
   },
   data() {
     return {
       completed: false,
-      progress_icon: 'fas fa-check-double'
+      progressIcon: 'fas fa-check-double'
     };
   },
 };

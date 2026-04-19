@@ -3,12 +3,12 @@
 export default {
   computed: {
     ...Vuex.mapGetters({
-      confirmDeleteTableId: 'restaurantStore/getConfirmDeleteTableId',
+      pendingRemoveTableId: 'restaurantStore/getPendingRemoveTableId',
     }),
   },
   watch: {
-    confirmDeleteTableId(table_id) {
-      if (table_id)
+    pendingRemoveTableId(tableId) {
+      if (tableId)
         this.$bvModal.show('modal-delete-table');
       else
         this.$bvModal.hide('modal-delete-table');
@@ -16,17 +16,16 @@ export default {
   },
   methods: {
     ...Vuex.mapActions({
-      setActionDeleteTable: 'restaurantStore/setActionDeleteTable',
-      setConfirmDeleteTableId: 'restaurantStore/setConfirmDeleteTableId',
+      removePendingTable: 'restaurantStore/removePendingTable',
+      setPendingRemoveTableId: 'restaurantStore/setPendingRemoveTableId',
     }),
-    handle_ok(bvModalEvt) {
-      // Prevent modal from closing
+    handleOk(bvModalEvt) {
       bvModalEvt.preventDefault();
 
-      this.setActionDeleteTable();
+      this.removePendingTable();
     },
-    handle_hidden() {
-      this.setConfirmDeleteTableId(null);
+    handleHidden() {
+      this.setPendingRemoveTableId(null);
     },
   },
 };

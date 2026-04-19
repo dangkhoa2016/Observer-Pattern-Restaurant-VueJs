@@ -9,17 +9,23 @@
   import Assistant from './assistant.vue';
 
   import Helper from './helper.js';
-  Vue.prototype.$helper = Helper;
+  import AppConstants from './app-constants.js';
 
-  //const variable
-  Vue.prototype.$tooltip_manual_time = 4000;
-  Vue.prototype.$tooltip_chef_time = 2000;
-  Vue.prototype.$animated_time = 500;
-  Vue.prototype.$wait_for_user_to_see_time = 1000;
-  Vue.prototype.$chef_status_free = 1;
-  Vue.prototype.$chef_status_processing = 2;
-  Vue.prototype.$order_status_done = 3;
-  Vue.prototype.$order_status_created = 1;
+  const {
+    APP_LABELS,
+    APP_MESSAGES,
+    APP_TIMEOUTS,
+    CHEF_STATUS,
+    DEFAULT_COUNTS,
+    ORDER_STATUS,
+  } = AppConstants;
+
+  Vue.prototype.$helper = Helper;
+  Vue.prototype.$appLabels = APP_LABELS;
+  Vue.prototype.$appMessages = APP_MESSAGES;
+  Vue.prototype.$appTimeouts = APP_TIMEOUTS;
+  Vue.prototype.$chefStatus = CHEF_STATUS;
+  Vue.prototype.$orderStatus = ORDER_STATUS;
 
   const store = new Vuex.Store({
     modules: {
@@ -39,9 +45,9 @@
     store,
     data() {
       return {
-        show_go_to_top: false,
-        table_count: 2,
-        chef_count: 2,
+        showGoToTop: false,
+        tableCount: DEFAULT_COUNTS.TABLES,
+        chefCount: DEFAULT_COUNTS.CHEFS,
       };
     },
     methods: {
@@ -49,8 +55,8 @@
         addTable: 'restaurantStore/addTable',
         addChef: 'restaurantStore/addChef',
       }),
-      handleScroll(ev) {
-        this.show_go_to_top = window.scrollY > 300;
+      handleScroll() {
+        this.showGoToTop = window.scrollY > 300;
       },
       handleRuntimeError(event) {
         const detail = event.detail || {};
@@ -64,16 +70,16 @@
           autoHideDelay: 5000,
         });
       },
-      go_to_top() {
+      goToTop() {
         window.scrollTo({ top: 0, behavior: 'smooth' });
       },
-      createTable() {
-        for (let index = 0; index < this.table_count; index++)
+      createTables() {
+        for (let index = 0; index < this.tableCount; index++)
           this.addTable();
       },
-      createChef() {
-        for (let index = 0; index < this.chef_count; index++)
-          this.addChef(this.$chef_status_free);
+      createChefs() {
+        for (let index = 0; index < this.chefCount; index++)
+          this.addChef(this.$chefStatus.IDLE);
       },
     },
     created() {
@@ -87,8 +93,8 @@
           arrow.classList.replace('arrow', 'tooltip-arrow');
       });
 
-      this.createTable();
-      this.createChef();
+      this.createTables();
+      this.createChefs();
     },
     beforeDestroy() {
       window.removeEventListener('scroll', this.handleScroll);

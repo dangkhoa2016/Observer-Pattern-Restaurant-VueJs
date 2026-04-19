@@ -1,40 +1,51 @@
 
 /*jshint esversion: 9 */
-const slogans = ['Bring Out The Foodie In You.', 'Find Happiness In Cooking.',
-  'Awaken Your Inner Chef.', 'Bring Out The Chef In You.'];
+import AppConstants from './app-constants.js';
+
+const { APP_TIMEOUTS, CHEF_SLOGANS } = AppConstants;
 
 export default {
   methods: {
     ...Vuex.mapActions({
-      setChefCooking: 'restaurantStore/setChefCooking',
+      updateChefOrderStatus: 'restaurantStore/updateChefOrderStatus',
     }),
-    complete_order() {
-      this.highlight_test();
+    completeOrder() {
+      this.highlightChef();
 
       setTimeout(() => {
-        this.setChefCooking({ chef_id: this.chef.id, chef_status: this.$chef_status_free, order_status: 3 });
-        this.current_order = null;
-      }, this.$animated_time);
+        this.updateChefOrderStatus({
+          chefId: this.chef.id,
+          chefStatus: this.$chefStatus.IDLE,
+          orderStatus: this.$orderStatus.DONE,
+        });
+        this.currentOrder = null;
+      }, this.$appTimeouts.UI_ANIMATION_MS);
     },
-    process_order() {
-      this.setChefCooking({ chef_id: this.chef.id, chef_status: this.$chef_status_processing, order_status: 2 });
+    processOrder() {
+      this.updateChefOrderStatus({
+        chefId: this.chef.id,
+        chefStatus: this.$chefStatus.BUSY,
+        orderStatus: this.$orderStatus.PROCESSING,
+      });
     },
-    highlight_test(unhighlight = false) {
-      if (unhighlight) {
-        this.is_highlight = false;
-        this.clear_timeout();
+    highlightChef(resetHighlight = false) {
+      if (resetHighlight) {
+        this.isHighlighted = false;
+        this.clearHighlightTimeout();
       }
 
-      this.is_highlight = true;
-      this.clear_timeout();
-      this.timeout_unhighlight = setTimeout(() => { this.is_highlight = false; }, this.$tooltip_chef_time);
+      this.isHighlighted = true;
+      this.clearHighlightTimeout();
+      this.highlightTimeoutId = setTimeout(() => {
+        this.isHighlighted = false;
+      }, APP_TIMEOUTS.CHEF_HIGHLIGHT_MS);
     },
-    clear_timeout() {
-      if (!this.timeout_unhighlight)
+    clearHighlightTimeout() {
+      if (!this.highlightTimeoutId)
         return;
 
-      clearTimeout(this.timeout_unhighlight);
-      this.timeout_unhighlight = null;
+      clearTimeout(this.highlightTimeoutId);
+      this.highlightTimeoutId = null;
     },
   },
   props: {
@@ -46,55 +57,54 @@ export default {
   data() {
     return {
       slogan: '',
-      current_order: null,
-      is_highlight: false,
-      timeout_unhighlight: null,
-      progress_icon: 'fas fa-clipboard-check'
+      currentOrder: null,
+      isHighlighted: false,
+      highlightTimeoutId: null,
+      progressIcon: 'fas fa-clipboard-check'
     };
   },
   computed: {
     ...Vuex.mapGetters({
-      getOrderForChef: 'restaurantStore/getOrderForChef',
-      getChefInfo: 'restaurantStore/getChefInfo',
+      getAssignedOrderForChef: 'restaurantStore/getAssignedOrderForChef',
     }),
     order() {
-      return this.getOrderForChef(this.chef.id);
+      return this.getAssignedOrderForChef(this.chef.id);
     },
-    tooltip_config() {
+    tooltipConfig() {
       return {
         placement: 'right', trigger: 'hover',
         customClass: 'custom-tooltip bs-tooltip-end',
       };
     },
-    is_processing() {
-      return this.chef.status === this.$chef_status_processing;
+    isProcessing() {
+      return this.chef.status === this.$chefStatus.BUSY;
     },
-    is_free() {
-      return this.chef.status === this.$chef_status_free;
+    isIdle() {
+      return this.chef.status === this.$chefStatus.IDLE;
     },
-    chef_class() {
+    chefClass() {
       return [
         'card w-25 chef float-start',
         {
-          'processing': this.is_processing,
-          highlight: this.is_highlight
+          'processing': this.isProcessing,
+          highlight: this.isHighlighted
         }
       ];
     },
   },
   mounted() {
-    this.slogan = slogans[Math.floor(Math.random() * slogans.length)];
+    this.slogan = CHEF_SLOGANS[Math.floor(Math.random() * CHEF_SLOGANS.length)];
   },
   watch: {
     order(val) {
-      if (!val || val.status !== this.$order_status_created || !this.is_free)
+      if (!val || val.status !== this.$orderStatus.PENDING || !this.isIdle)
         return false;
 
-      this.current_order = val;
-      this.process_order();
+      this.currentOrder = val;
+      this.processOrder();
     },
   },
   beforeDestroy() {
-    this.clear_timeout();
+    this.clearHighlightTimeout();
   },
 };

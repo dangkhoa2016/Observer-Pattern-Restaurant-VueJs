@@ -1,13 +1,13 @@
 <template>
 
-  <div :class='main_class' role='status' aria-live='polite'>
+  <div :class='mainClass' role='status' aria-live='polite'>
     <div class='input-group'>
       <div class='form-control p-1'>
-        <progress-bar :time-to-complete='time_to_complete'
-          @progress-bar-complete='mark_completed' :skip-timeout='skip_timeout'></progress-bar>
+        <progress-bar :time-to-complete='timeToComplete'
+          @progress-bar-complete='markCompleted' :skip-timeout='skipTimeout'></progress-bar>
       </div>
       <b-button type='button' class='btn-complete' @click='complete'
-        variant='info' v-b-tooltip='tooltip_config'>
+        variant='info' v-b-tooltip='tooltipConfig'>
         <span :class='progressIcon'></span>
       </b-button>
     </div>

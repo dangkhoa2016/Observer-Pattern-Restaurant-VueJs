@@ -10,34 +10,34 @@ export default {
   data() {
     return {
       completed: false,
-      time_to_complete: 0,
-      skip_timeout: false,
+      timeToComplete: 0,
+      skipTimeout: false,
     };
   },
   methods: {
-    mark_completed() {
+    markCompleted() {
       setTimeout(() => {
         this.completed = true;
         this.$emit('complete');
-      }, this.$wait_for_user_to_see_time);
+      }, this.$appTimeouts.PROGRESS_COMPLETE_DELAY_MS);
     },
     complete() {
-      this.skip_timeout = true;
+      this.skipTimeout = true;
     },
   },
   created() {
-    this.time_to_complete = Math.floor(Math.random() * 30) + 1;
+    this.timeToComplete = Math.floor(Math.random() * 30) + 1;
   },
   computed: {
-    tooltip_config() {
+    tooltipConfig() {
       return {
         placement: 'right',
         trigger: 'hover',
-        title: 'Test button: click to complete the progress',
+        title: this.$appLabels.PROGRESS_COMPLETE_TOOLTIP,
         customClass: 'custom-tooltip bs-tooltip-end',
       };
     },
-    main_class() {
+    mainClass() {
       return ['pg-test mb-2 animate', { 'closed': this.completed }];
     },
   },

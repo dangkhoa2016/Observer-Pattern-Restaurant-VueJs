@@ -1,7 +1,8 @@
 /*jshint esversion: 9 */
-const slogans = ['Fit for a president...', 'Only the best...',
-  'Reserved for VIPs...', 'For our most valued guests...'];
 import OrderFood from './order-food.vue';
+import AppConstants from './app-constants.js';
+
+const { APP_LABELS, APP_TIMEOUTS, TABLE_SLOGANS } = AppConstants;
 
 export default {
   components: { OrderFood, },
@@ -16,68 +17,69 @@ export default {
     },
   },
   watch: {
-    selectedFoods(val) {
-      if (this.menuOpenForTable === this.table_id)
-        this.orders = [...this.orders, ...val];
+    selectedFoods(orders) {
+      if (this.currentTableId === this.tableId)
+        this.orders = [...this.orders, ...orders];
     },
   },
   data() {
     return {
-      closed: false,
       slogan: '',
       orders: [],
-      is_highlight: false,
-      tooltip_title: 'Receive updates from the assistant',
-      base_unsubscribe: null,
-      timeout_unhighlight: null,
+      isHighlighted: false,
+      tooltipTitle: APP_LABELS.RECEIVE_UPDATES_TOOLTIP,
+      assistantUnsubscribe: null,
+      highlightTimeoutId: null,
     };
   },
   methods: {
     ...Vuex.mapActions({
-      showModalFoodsForTable: 'restaurantStore/showModalFoodsForTable',
-      setConfirmDeleteTableId: 'restaurantStore/setConfirmDeleteTableId',
+      setCurrentTableId: 'restaurantStore/setCurrentTableId',
+      setPendingRemoveTableId: 'restaurantStore/setPendingRemoveTableId',
     }),
-    showModalFoods() {
-      this.showModalFoodsForTable(this.table_id);
+    showMenuForTable() {
+      this.setCurrentTableId(this.tableId);
     },
-    showConfirmRemove() {
-      this.setConfirmDeleteTableId(this.table_id);
+    confirmRemoveTable() {
+      this.setPendingRemoveTableId(this.tableId);
     },
-    hide_tooltip() {
-      this.is_highlight = false;
-      this.$root.$emit('bv::hide::tooltip', `tb-${this.table_id}`);
+    hideTooltip() {
+      this.isHighlighted = false;
+      this.$root.$emit('bv::hide::tooltip', `tb-${this.tableId}`);
     },
-    show_tooltip() {
-      this.is_highlight = true;
-      this.$root.$emit('bv::show::tooltip', `tb-${this.table_id}`);
+    showTooltip() {
+      this.isHighlighted = true;
+      this.$root.$emit('bv::show::tooltip', `tb-${this.tableId}`);
     },
-    highlight_test(unhighlight = false) {
-      if (unhighlight) {
-        this.hide_tooltip();
-        this.clear_timeout();
+    highlightTable(resetHighlight = false) {
+      if (resetHighlight) {
+        this.hideTooltip();
+        this.clearHighlightTimeout();
       }
 
-      this.show_tooltip();
-      this.clear_timeout();
+      this.showTooltip();
+      this.clearHighlightTimeout();
 
-      this.timeout_unhighlight = setTimeout(() => { this.hide_tooltip(); }, this.$tooltip_manual_time);
+      this.highlightTimeoutId = setTimeout(() => {
+        this.hideTooltip();
+      }, APP_TIMEOUTS.TABLE_HIGHLIGHT_MS);
     },
-    clear_timeout() {
-      if (!this.timeout_unhighlight)
+    clearHighlightTimeout() {
+      if (!this.highlightTimeoutId)
         return;
 
-      clearTimeout(this.timeout_unhighlight);
-      this.timeout_unhighlight = null;
+      clearTimeout(this.highlightTimeoutId);
+      this.highlightTimeoutId = null;
     },
-    subscribe() {
-      if (this.base_unsubscribe)
+    subscribeToAssistant() {
+      if (this.assistantUnsubscribe)
         return;
 
-      this.base_unsubscribe = this.$watch(() => this.completedFoodsForTable, completed => {
+      this.assistantUnsubscribe = this.$watch(() => this.completedOrdersForTable, completed => {
         if (!Array.isArray(completed) || completed.length === 0)
           return;
 
-        this.highlight_test();
+        this.highlightTable();
 
         completed.forEach(order => {
           const found = this.orders.find(item => item.id === order.id);
@@ -86,18 +88,18 @@ export default {
         });
       });
     },
-    unsubscribe() {
-      if (!this.base_unsubscribe)
+    unsubscribeFromAssistant() {
+      if (!this.assistantUnsubscribe)
         return;
 
-      this.base_unsubscribe();
-      this.base_unsubscribe = null;
+      this.assistantUnsubscribe();
+      this.assistantUnsubscribe = null;
     },
-    eat_complete(order_id) {
-      if (typeof order_id !== 'number')
+    handleEatComplete(orderId) {
+      if (typeof orderId !== 'number')
         return;
 
-      const indx = this.orders.findIndex(o => o.id === order_id);
+      const indx = this.orders.findIndex(o => o.id === orderId);
       if (indx === -1)
         return;
 
@@ -106,32 +108,32 @@ export default {
   },
   computed: {
     ...Vuex.mapGetters({
-      menuOpenForTable: 'restaurantStore/getCurrentTable',
+      currentTableId: 'restaurantStore/getCurrentTableId',
       selectedFoods: 'restaurantStore/getSelectedFoods',
-      getCompletedFoodsForTable: 'restaurantStore/getCompletedFoodsForTable',
+      getCompletedOrdersForTable: 'restaurantStore/getCompletedOrdersForTable',
     }),
-    offset_left() {
+    offsetLeft() {
       return this.index * 20;
     },
-    table_id() {
+    tableId() {
       return this.table.id;
     },
-    completedFoodsForTable() {
-      return this.getCompletedFoodsForTable(this.table_id);
+    completedOrdersForTable() {
+      return this.getCompletedOrdersForTable(this.tableId);
     },
-    card_class() {
-      return ['draggable w-20 float-start', { highlight: this.is_highlight }];
+    cardClass() {
+      return ['draggable w-20 float-start', { highlight: this.isHighlighted }];
     },
   },
   mounted() {
     new Draggabilly(this.$el, { handle: '.card-header' });
-    this.slogan = slogans[Math.floor(Math.random() * slogans.length)];
+    this.slogan = TABLE_SLOGANS[Math.floor(Math.random() * TABLE_SLOGANS.length)];
   },
   created() {
-    this.subscribe();
+    this.subscribeToAssistant();
   },
   beforeDestroy() {
-    this.unsubscribe();
-    this.clear_timeout();
+    this.unsubscribeFromAssistant();
+    this.clearHighlightTimeout();
   },
 };
